@@ -36,7 +36,7 @@ jobs:
             -X POST \
             "https://api.boomi.com/api/rest/v1/$BOOMI_ACCOUNT_ID/Deployment" \
             -d '{
-              "environmentId": "ENV-XXXX",
-              "componentId": "PROC-XXXX",
+              "environmentId": "ed1edd29-64c7-410a-818e-376ca25996bb",
+              "componentId": "d7e24a4e-7271-49ed-ab41-bc738148a3fc",
               "version": "1.0"
             }'
