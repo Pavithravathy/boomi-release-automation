@@ -1,10 +1,42 @@
-name: Hello World
+name: Boomi CI/CD Demo
 
-on: push
+on:
+  push:
+    branches:
+      - main   # Trigger on push to main branch
 
 jobs:
-  say-hello:
+  build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Print message
-        run: echo "Hello, World!"
+      # Step 1: Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Java (Boomi SDK requires Java)
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      # Step 3: Hello World (CI validation)
+      - name: Run Hello World
+        run: echo "Hello World - GitHub Actions CI/CD for Boomi!"
+
+      # Step 4: Deploy Boomi Process (example using Boomi AtomSphere API)
+      - name: Deploy Boomi Process
+        env:
+          BOOMI_ACCOUNT_ID: ${{ secrets.BOOMI_ACCOUNT_ID }}
+          BOOMI_USERNAME: ${{ secrets.BOOMI_USERNAME }}
+          BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
+        run: |
+          curl -u "$BOOMI_USERNAME:$BOOMI_PASSWORD" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            "https://api.boomi.com/api/rest/v1/$BOOMI_ACCOUNT_ID/Deployment" \
+            -d '{
+              "environmentId": "ENV-XXXX",
+              "componentId": "PROC-XXXX",
+              "version": "1.0"
+            }'
