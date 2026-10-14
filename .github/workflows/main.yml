@@ -34,9 +34,9 @@ jobs:
           curl -u "$BOOMI_USERNAME:$BOOMI_PASSWORD" \
             -H "Content-Type: application/json" \
             -X POST \
-            "https://api.boomi.com/api/rest/v1/$BOOMI_ACCOUNT_ID/Deployment" \
+            "https://api.boomi.com/api/rest/v1/$BOOMI_ACCOUNT_ID/PackagedComponent" \
             -d '{
-              "environmentId": "ed1edd29-64c7-410a-818e-376ca25996bb",
               "componentId": "d7e24a4e-7271-49ed-ab41-bc738148a3fc",
-              "version": "1.0"
+             "packageVersion":"1.0.0",
+              "notes":"Release package"
             }'
