@@ -49,7 +49,7 @@ jobs:
 
               echo "$RESPONSE"
 
-              PACKAGE_ID=$(echo "$RESPONSE" | jq -r '.packageId')
+              PACKAGE_ID=$(echo "$RESPONSE" | sed -n 's:.*<bns:packageId>\(.*\)</bns:packageId>.*:\1:p')
 
               echo "package_id=$PACKAGE_ID" >> $GITHUB_OUTPUT
 
