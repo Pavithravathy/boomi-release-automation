@@ -43,7 +43,7 @@ jobs:
               -d '{
                 "componentId": "d7e24a4e-7271-49ed-ab41-bc738148a3fc",
               "componentVersion":"2",
-             "packageVersion":"0.01",
+             "packageVersion":"0.02",
               "notes":"Release package"
                 }')
 
