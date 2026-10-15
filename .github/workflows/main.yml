@@ -25,19 +25,41 @@ jobs:
       - name: Run Hello World
         run: echo "Hello World - GitHub Actions CI/CD for Boomi!"
 
-      # Step 4: Deploy Boomi Process (example using Boomi AtomSphere API)
-      - name: Deploy Boomi Process
+      # Step 4: Package Boomi Process (example using Boomi AtomSphere API)
+      - name: Package Boomi Process
+        id: package
+        
         env:
           BOOMI_ACCOUNT_ID: ${{ secrets.BOOMI_ACCOUNT_ID }}
           BOOMI_USERNAME: ${{ secrets.BOOMI_USERNAME }}
           BOOMI_PASSWORD: ${{ secrets.BOOMI_PASSWORD }}
         run: |
-          curl -u "$BOOMI_USERNAME:$BOOMI_PASSWORD" \
-            -H "Content-Type: application/json" \
-            -X POST \
-            "https://api.boomi.com/api/rest/v1/$BOOMI_ACCOUNT_ID/PackagedComponent" \
-            -d '{
-              "componentId": "d7e24a4e-7271-49ed-ab41-bc738148a3fc",
+    
+
+          RESPONSE=$(curl -s -X POST \
+              "https://api.boomi.com/api/rest/v1/${BOOMI_ACCOUNT_ID}/PackagedComponent" \
+              -u "$BOOMI_USERNAME:$BOOMI_PASSWORD" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "componentId": "d7e24a4e-7271-49ed-ab41-bc738148a3fc",
+              "componentVersion":"2",
              "packageVersion":"1.0.0",
               "notes":"Release package"
-            }'
+                }')
+
+              echo "$RESPONSE"
+
+              PACKAGE_ID=$(echo "$RESPONSE" | jq -r '.packageId')
+
+              echo "package_id=$PACKAGE_ID" >> $GITHUB_OUTPUT
+
+          - name: Deploy to Dev
+               run: |
+              curl -X POST \
+              "https://api.boomi.com/api/rest/v1/${BOOMI_ACCOUNT_ID}/DeployedPackage" \
+               -u "$BOOMI_USERNAME:$BOOMI_PASSWORD" \
+                -H "Content-Type: application/json" \
+                -d '{
+                "packageId":"${{ steps.package.outputs.package_id }}",
+                "environmentId":"ed1edd29-64c7-410a-818e-376ca25996bb"
+                }'
